@@ -102,6 +102,13 @@ npm run build
 npm run lint
 ```
 
+## 📸 Screenshot Antarmuka
+
+Berikut bukti tampilan aplikasi (home & statistik) sesuai deploy Vercel:
+
+- Home: ![Screenshot Home](public/ss1.png)
+- Statistik: ![Screenshot Statistik](public/ss2.png)
+
 ## 🧪 Testing
 
 ### Menjalankan Semua Tests
