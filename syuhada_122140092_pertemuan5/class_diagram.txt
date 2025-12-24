@@ -1,0 +1,248 @@
+╔════════════════════════════════════════════════════════════════════════════════╗
+║                       DIAGRAM CLASS - LIBRARY MANAGEMENT SYSTEM                ║
+║                            Syuhada Rantisi (122140092)                         ║
+╚════════════════════════════════════════════════════════════════════════════════╝
+
+Petunjuk: Gunakan teks di bawah ini sebagai referensi untuk membuat diagram class
+          menggunakan tools seperti draw.io, Lucidchart, atau PlantUML.
+
+════════════════════════════════════════════════════════════════════════════════
+                            STRUKTUR HIERARKI CLASS
+════════════════════════════════════════════════════════════════════════════════
+
+                              ┌─────────────────┐
+                              │  LibraryItem    │
+                              │   <<abstract>>  │
+                              └────────┬────────┘
+                                       │
+                       ┌───────────────┴───────────────┐
+                       │                               │
+                  ┌────▼─────┐                   ┌────▼─────┐
+                  │   Book   │                   │ Magazine │
+                  └──────────┘                   └──────────┘
+
+                  ┌──────────────┐
+                  │   Library    │
+                  └──────────────┘
+                         │
+                         │ manages (1:N)
+                         │
+                  ┌──────▼───────┐
+                  │ LibraryItem  │
+                  │   (collection)│
+                  └──────────────┘
+
+
+════════════════════════════════════════════════════════════════════════════════
+                     CLASS: LibraryItem (Abstract Base Class)
+════════════════════════════════════════════════════════════════════════════════
+
+┌───────────────────────────────────────────────────────────────────────────────┐
+│                           <<abstract>>                                        │
+│                          LibraryItem                                          │
+├───────────────────────────────────────────────────────────────────────────────┤
+│ ATTRIBUTES:                                                                   │
+│   # _id : str                              (protected)                        │
+│   # _title : str                           (protected)                        │
+│   - __available : bool                     (private)                          │
+│   - __borrowed_date : datetime             (private)                          │
+├───────────────────────────────────────────────────────────────────────────────┤
+│ PROPERTIES:                                                                   │
+│   + id : str                               (getter)                           │
+│   + title : str                            (getter)                           │
+│   + available : bool                       (getter/setter)                    │
+├───────────────────────────────────────────────────────────────────────────────┤
+│ METHODS:                                                                      │
+│   + __init__(item_id: str, title: str)                                        │
+│   + borrow() : bool                                                           │
+│   + return_item() : bool                                                      │
+│   + __str__() : str                                                           │
+│                                                                               │
+│ ABSTRACT METHODS:                                                             │
+│   + get_info() : str                       (abstract)                         │
+│   + calculate_late_fee(days_late: int) : float    (abstract)                 │
+└───────────────────────────────────────────────────────────────────────────────┘
+
+
+════════════════════════════════════════════════════════════════════════════════
+                              CLASS: Book (extends LibraryItem)
+════════════════════════════════════════════════════════════════════════════════
+
+┌───────────────────────────────────────────────────────────────────────────────┐
+│                               Book                                            │
+│                         (extends LibraryItem)                                 │
+├───────────────────────────────────────────────────────────────────────────────┤
+│ ATTRIBUTES:                                                                   │
+│   # _author : str                          (protected)                        │
+│   # _isbn : str                            (protected)                        │
+│   # _pages : int                           (protected)                        │
+│                                                                               │
+│ CLASS VARIABLES:                                                              │
+│   + LATE_FEE_PER_DAY : int = 2000                                             │
+├───────────────────────────────────────────────────────────────────────────────┤
+│ PROPERTIES:                                                                   │
+│   + author : str                           (getter)                           │
+│   + isbn : str                             (getter)                           │
+│   + pages : int                            (getter)                           │
+├───────────────────────────────────────────────────────────────────────────────┤
+│ METHODS:                                                                      │
+│   + __init__(item_id: str, title: str, author: str,                          │
+│              isbn: str, pages: int)                                           │
+│   + get_info() : str                       (overrides)                        │
+│   + calculate_late_fee(days_late: int) : float    (overrides)                │
+└───────────────────────────────────────────────────────────────────────────────┘
+
+
+════════════════════════════════════════════════════════════════════════════════
+                           CLASS: Magazine (extends LibraryItem)
+════════════════════════════════════════════════════════════════════════════════
+
+┌───────────────────────────────────────────────────────────────────────────────┐
+│                             Magazine                                          │
+│                         (extends LibraryItem)                                 │
+├───────────────────────────────────────────────────────────────────────────────┤
+│ ATTRIBUTES:                                                                   │
+│   # _publisher : str                       (protected)                        │
+│   # _issue_number : int                    (protected)                        │
+│   # _month : str                           (protected)                        │
+│                                                                               │
+│ CLASS VARIABLES:                                                              │
+│   + LATE_FEE_PER_DAY : int = 1000                                             │
+├───────────────────────────────────────────────────────────────────────────────┤
+│ PROPERTIES:                                                                   │
+│   + publisher : str                        (getter)                           │
+│   + issue_number : int                     (getter)                           │
+│   + month : str                            (getter)                           │
+├───────────────────────────────────────────────────────────────────────────────┤
+│ METHODS:                                                                      │
+│   + __init__(item_id: str, title: str, publisher: str,                       │
+│              issue_number: int, month: str)                                   │
+│   + get_info() : str                       (overrides)                        │
+│   + calculate_late_fee(days_late: int) : float    (overrides)                │
+└───────────────────────────────────────────────────────────────────────────────┘
+
+
+════════════════════════════════════════════════════════════════════════════════
+                                   CLASS: Library
+════════════════════════════════════════════════════════════════════════════════
+
+┌───────────────────────────────────────────────────────────────────────────────┐
+│                               Library                                         │
+├───────────────────────────────────────────────────────────────────────────────┤
+│ ATTRIBUTES:                                                                   │
+│   - __items : List[LibraryItem]            (private)                          │
+│   - __name : str                           (private)                          │
+├───────────────────────────────────────────────────────────────────────────────┤
+│ PROPERTIES:                                                                   │
+│   + name : str                             (getter)                           │
+│   + total_items : int                      (getter)                           │
+│   + available_items : int                  (getter)                           │
+├───────────────────────────────────────────────────────────────────────────────┤
+│ METHODS:                                                                      │
+│   + __init__(name: str)                                                       │
+│   + add_item(item: LibraryItem) : bool                                        │
+│   + display_items(show_all: bool = True) : None                               │
+│   + search_by_id(item_id: str) : Optional[LibraryItem]                        │
+│   + search_by_title(title: str) : List[LibraryItem]                           │
+│   + borrow_item(item_id: str) : bool                                          │
+│   + return_item(item_id: str) : bool                                          │
+│   + display_statistics() : None                                               │
+└───────────────────────────────────────────────────────────────────────────────┘
+
+
+════════════════════════════════════════════════════════════════════════════════
+                               RELATIONSHIP DIAGRAM
+════════════════════════════════════════════════════════════════════════════════
+
+Inheritance (Generalization):
+    LibraryItem ◁────── Book
+    LibraryItem ◁────── Magazine
+
+Composition/Aggregation:
+    Library ◆────── LibraryItem (1:N)
+    
+Legend:
+    ◁──── : Inheritance (is-a relationship)
+    ◆──── : Composition (has-a relationship)
+
+
+════════════════════════════════════════════════════════════════════════════════
+                         DESIGN PATTERNS & PRINCIPLES USED
+════════════════════════════════════════════════════════════════════════════════
+
+1. ABSTRACT CLASS PATTERN
+   - LibraryItem sebagai abstract base class
+   - Memaksa implementasi method di subclass
+
+2. TEMPLATE METHOD PATTERN
+   - Abstract methods sebagai template
+   - Subclass menyediakan implementasi spesifik
+
+3. ENCAPSULATION
+   - Private attributes: __available, __items, __name
+   - Protected attributes: _id, _title, _author, dll
+   - Public interface melalui properties dan methods
+
+4. POLYMORPHISM
+   - Method overriding: get_info(), calculate_late_fee()
+   - Duck typing: Library dapat bekerja dengan semua LibraryItem
+
+5. COMPOSITION
+   - Library memiliki koleksi LibraryItem
+   - Relationship 1:N (one-to-many)
+
+
+════════════════════════════════════════════════════════════════════════════════
+                         CARA MENGGUNAKAN DIAGRAM INI
+════════════════════════════════════════════════════════════════════════════════
+
+Untuk Draw.io / Diagrams.net:
+1. Buka draw.io
+2. Pilih template "UML Class Diagram"
+3. Buat 4 kotak untuk masing-masing class
+4. Tambahkan kompartemen untuk:
+   - Nama class (bagian atas)
+   - Attributes (bagian tengah)
+   - Methods (bagian bawah)
+5. Hubungkan dengan:
+   - Panah inheritance (segitiga terbuka) dari Book/Magazine ke LibraryItem
+   - Panah composition (diamond) dari Library ke LibraryItem
+6. Gunakan stereotypes:
+   - <<abstract>> untuk LibraryItem
+   - + untuk public
+   - # untuk protected
+   - - untuk private
+
+Untuk PlantUML:
+Lihat file class_diagram.puml untuk syntax PlantUML
+
+Untuk Lucidchart:
+1. Pilih UML Class Diagram template
+2. Drag-drop class shapes
+3. Edit kompartemen sesuai dengan informasi di atas
+4. Hubungkan dengan relationship lines
+
+
+════════════════════════════════════════════════════════════════════════════════
+                                  VISIBILITY
+════════════════════════════════════════════════════════════════════════════════
+
++ Public       : Dapat diakses dari mana saja
+# Protected    : Dapat diakses dari class itu sendiri dan subclass (single _)
+- Private      : Hanya dapat diakses dari class itu sendiri (double __)
+
+
+════════════════════════════════════════════════════════════════════════════════
+                                    NOTES
+════════════════════════════════════════════════════════════════════════════════
+
+1. LibraryItem adalah abstract class yang tidak bisa diinstansiasi langsung
+2. Book dan Magazine HARUS mengimplementasikan get_info() dan calculate_late_fee()
+3. Library menggunakan composition untuk menyimpan LibraryItem
+4. Properties digunakan untuk controlled access ke private attributes
+5. Type hints digunakan untuk better code documentation
+
+
+════════════════════════════════════════════════════════════════════════════════
+                                  END OF DIAGRAM
+════════════════════════════════════════════════════════════════════════════════
