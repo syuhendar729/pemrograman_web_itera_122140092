@@ -36,9 +36,11 @@ def create(request):
         semester=data["semester"],
     )
     session.add(mk)
-    session.flush()
 
-    return mk.to_dict()
+    return {
+        "status": "Created",
+        "matakuliah": mk.to_dict(),
+    } 
 
 
 @view_config(route_name="update_matakuliah", renderer="json")
